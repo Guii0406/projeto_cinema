@@ -1,0 +1,23 @@
+﻿@typeparam TItem
+
+@if (Lista == null)
+{
+    @NullTemplate
+}
+else if (Lista.Count == 0)
+{
+    @EmptyTemplate
+}
+else
+{
+    @foreach (TItem item in Lista)
+    {
+        @ElementTemplate(item)
+    }
+}
+@code {
+        [Parameter] public RenderFragment NullTemplate { get; set; }
+        [Parameter] public RenderFragment EmptyTemplate { get; set; }
+        [Parameter] public RenderFragment<TItem> ElementTemplate { get; set; }
+        [Parameter] public List<TItem> Lista { get; set; }
+    }

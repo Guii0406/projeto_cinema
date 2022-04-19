@@ -1,0 +1,120 @@
+﻿@page "/venda"
+@inject IVendaRepository vendaRepository
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@attribute [Authorize]
+<EditForm Model="@venda" OnValidSubmit="@Adicionar">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    @*<label>Codigo da venda</label>
+        <InputNumber class="form-control col-3" @bind-Value="venda.codigo" placeholder="codigo" />*@
+
+    <label>Valor da venda</label>
+    <InputNumber class="form-control col-3" @bind-Value="venda.ValorIngresso" placeholder="valor" />
+
+    <label>Sessão da venda</label>
+    <InputNumber class="form-control col-3" @bind-Value="venda.CodSessao" placeholder="sessão" />
+
+    <label>Data da venda</label>
+    <InputDate class="form-control col-3" @bind-Value="venda.DataVenda" placeholder="sessão" />
+
+    <label>Filial da venda</label>
+    <InputNumber class="form-control col-3" @bind-Value="venda.CodFilial" placeholder="sessão" />
+
+    <input type="submit" value="Adicionar" />
+</EditForm>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Codigo</th>
+            <th scope="col">Valor</th>
+            <th scope="col">Codigo Filial</th>
+            <th scope="col">Data da venda</th>
+            <th scope="col">Sessão</th>
+        </tr>
+    </thead>
+    <tbody>
+        <ProjetoCinema.Client.Shared.Lists.ListVenda listaVendas="listaVendas" />
+    </tbody>
+</table>
+
+<button @onclick="FormEdicao">Editar</button>
+
+<div style="display: @display">
+    <EditForm Model="@vendaEdicao" OnValidSubmit="Editar">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <label>Codigo da venda</label>
+        <InputNumber class="form-control col-3" @bind-Value="vendaEdicao.CodVenda" placeholder="codigo" />
+
+        <label>Valor da venda</label>
+        <InputNumber class="form-control col-3" @bind-Value="vendaEdicao.ValorIngresso" placeholder="valor" />
+
+        <label>Sessão da venda</label>
+        <InputNumber class="form-control col-3" @bind-Value="vendaEdicao.CodSessao" placeholder="sessão" />
+
+        <label>Data da venda</label>
+        <InputDate class="form-control col-3" @bind-Value="vendaEdicao.DataVenda" placeholder="sessão" />
+
+        <label>Filial da venda</label>
+        <InputNumber class="form-control col-3" @bind-Value="vendaEdicao.CodFilial" placeholder="sessão" />
+
+        <input type="submit" value="Editar" />
+    </EditForm>
+</div>
+@code {
+    string display = "none";
+    public ProjetoCinema.Server.Models.Venda venda { get; set; }
+    public ProjetoCinema.Server.Models.Venda vendaEdicao { get; set; }
+    List<ProjetoCinema.Server.Models.Venda> listaVendas;
+
+    protected async override Task OnInitializedAsync()
+    {
+        venda = new ProjetoCinema.Server.Models.Venda();
+        vendaEdicao = new ProjetoCinema.Server.Models.Venda();
+        listaVendas = await vendaRepository.GetVendas();
+        base.OnInitializedAsync();
+    }
+    private async Task Adicionar()
+    {
+        try
+        {
+            await vendaRepository.CreateVenda(venda);
+            listaVendas = await vendaRepository.GetVendas();
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+        //listaVendas.Add(venda);
+        //venda = new CVenda();
+    }
+    private async Task Editar()
+    {
+        Console.WriteLine("editando...");
+        //ProjetoCinema.Server.Models.Venda codfilial = await vendaRepository.GetVenda(vendaEdicao.CodVenda);
+        //vendaEdicao.CodFilial = codfilial.CodFilial;
+        vendaRepository.UpdateVenda(vendaEdicao);
+        listaVendas = await vendaRepository.GetVendas();
+
+        //foreach (CVenda venda in listaVendas)
+        //{
+        //    if (vendaEdicao.codigo == venda.codigo)
+        //    {
+        //        venda.valor = vendaEdicao.valor;
+        //        venda.sessao = vendaEdicao.sessao;
+        //    }
+        //}
+    }
+
+    void FormEdicao()
+    {
+        if (display == "none") { display = "block"; } else { display = "none"; }
+    }
+
+
+}

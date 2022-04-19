@@ -1,0 +1,48 @@
+﻿@inject IChefiaRepository chefiaRepository
+<GenericList Lista="listaChefias">
+    <NullTemplate><p>Loading...</p></NullTemplate>
+
+    <EmptyTemplate><p>Nada encontrado...</p></EmptyTemplate>
+
+    <ElementTemplate Context="ctxChefia">
+
+        <ProjetoCinema.Client.Shared.Singles.SingleChefia chefia="ctxChefia" Excluir="Excluir" />
+
+    </ElementTemplate>
+
+</GenericList>
+
+<ProjetoCinema.Client.Shared.Dialog.ConfirmationDialog Titulo="Atenção!" @ref="confirmation" onCancel="onCancel" onConfirm="onConfirm">
+    <div>Deseja apagar este item?</div>
+</ProjetoCinema.Client.Shared.Dialog.ConfirmationDialog>
+
+@code {
+    ConfirmationDialog confirmation;
+    [Parameter] public List<ProjetoCinema.Server.Models.Chefia> listaChefias { get; set; }
+    ProjetoCinema.Server.Models.Chefia chefiaToDelete;
+
+    private async Task onConfirm()
+    {
+
+        //listaGeneros.Remove(generoToDelete);
+        int CodChefia = (int)chefiaToDelete.CodChefia;
+        await chefiaRepository.DeleteChefia(CodChefia);
+        listaChefias = await chefiaRepository.GetChefias();
+        confirmation.Hide();
+        chefiaToDelete = null;
+    }
+
+    void onCancel()
+    {
+        confirmation.Hide();
+        chefiaToDelete = null;
+    }
+
+    public void Excluir(ProjetoCinema.Server.Models.Chefia chefia)
+    {
+        chefiaToDelete = chefia;
+        confirmation.Show();
+    }
+
+}
+

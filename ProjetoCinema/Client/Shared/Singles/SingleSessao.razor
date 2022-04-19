@@ -1,0 +1,21 @@
+﻿
+<tr>
+    <th scope="row">@sessao.CodSessao</th>
+    <th scope="row">@sessao.CodFilme</th>
+    <th scope="row">@sessao.DataSessao.ToShortDateString()</th>
+    <th scope="row">@sessao.HorarioSessao</th>
+    <th scope="row">@sessao.CodSala</th>
+    <th scope="row">@sessao.CodFilial</th>
+    <td>@sessao.Idioma<button style="margin-left: 10px" @onclick="@(() => Excluir.InvokeAsync(sessao))">X</button> </td>
+
+</tr>
+
+@code {
+    [Parameter] public ProjetoCinema.Server.Models.Sessao sessao { get; set; }
+    [Parameter] public EventCallback<ProjetoCinema.Server.Models.Sessao> Excluir { get; set; }
+
+
+}
+
+
+

@@ -1,0 +1,46 @@
+﻿@inject IFornecedorRepository fornecedorRepository
+<GenericList Lista="listaFornecedores">
+    <NullTemplate><p>Loading...</p></NullTemplate>
+
+    <EmptyTemplate><p>Nada encontrado...</p></EmptyTemplate>
+
+    <ElementTemplate Context="ctxFornecedor">
+
+        <ProjetoCinema.Client.Shared.Singles.SingleFornecedor fornecedor="ctxFornecedor" Excluir="Excluir" />
+
+    </ElementTemplate>
+
+</GenericList>
+
+<ProjetoCinema.Client.Shared.Dialog.ConfirmationDialog Titulo="Atenção!" @ref="confirmation" onCancel="onCancel" onConfirm="onConfirm">
+    <div>Deseja apagar este item?</div>
+</ProjetoCinema.Client.Shared.Dialog.ConfirmationDialog>
+
+@code {
+    ConfirmationDialog confirmation;
+    [Parameter] public List<ProjetoCinema.Server.Models.Fornecedor> listaFornecedores { get; set; }
+    ProjetoCinema.Server.Models.Fornecedor fornecedorToDelete;
+
+    private async Task onConfirm()
+    {
+        await fornecedorRepository.DeleteFornecedor(fornecedorToDelete.CodFornecedor);
+        listaFornecedores = await fornecedorRepository.GetFornecedores();
+        confirmation.Hide();
+        fornecedorToDelete = null;
+    }
+
+    void onCancel()
+    {
+        confirmation.Hide();
+        fornecedorToDelete = null;
+    }
+
+    public void Excluir(ProjetoCinema.Server.Models.Fornecedor fornecedor)
+    {
+        fornecedorToDelete = fornecedor;
+        confirmation.Show();
+    }
+
+}
+
+

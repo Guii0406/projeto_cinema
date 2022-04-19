@@ -1,0 +1,44 @@
+﻿@inject IVendaRepository vendaRepository
+<GenericList Lista="listaVendas">
+    <NullTemplate><p>Loading...</p></NullTemplate>
+
+    <EmptyTemplate><p>Nada encontrado...</p></EmptyTemplate>
+
+    <ElementTemplate Context="ctxVenda">
+
+        <ProjetoCinema.Client.Shared.Singles.SingleVenda venda="ctxVenda" Excluir="Excluir" />
+
+    </ElementTemplate>
+
+</GenericList>
+
+<ProjetoCinema.Client.Shared.Dialog.ConfirmationDialog Titulo="Atenção!" @ref="confirmation" onCancel="onCancel" onConfirm="onConfirm">
+    <div>Deseja apagar este item?</div>
+</ProjetoCinema.Client.Shared.Dialog.ConfirmationDialog>
+
+@code {
+    ConfirmationDialog confirmation;
+    [Parameter] public List<ProjetoCinema.Server.Models.Venda> listaVendas { get; set; }
+    ProjetoCinema.Server.Models.Venda vendaToDelete;
+
+    private async Task onConfirm()
+    {
+        await vendaRepository.DeleteVenda(vendaToDelete.CodVenda);
+        listaVendas = await vendaRepository.GetVendas();
+        confirmation.Hide();
+        vendaToDelete = null;
+    }
+
+    void onCancel()
+    {
+        confirmation.Hide();
+        vendaToDelete = null;
+    }
+
+    public void Excluir(ProjetoCinema.Server.Models.Venda venda)
+    {
+        vendaToDelete = venda;
+        confirmation.Show();
+    }
+
+}

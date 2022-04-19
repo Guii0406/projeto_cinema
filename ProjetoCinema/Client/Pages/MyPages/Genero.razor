@@ -1,0 +1,101 @@
+﻿@page "/genero"
+@inject IGeneroRepository generoRepository
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@attribute [Authorize]
+
+<EditForm Model="@genero" OnValidSubmit="@Adicionar">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    @*<label>Codigo do genero</label>
+        <InputNumber class="form-control col-3" @bind-Value="genero.codigo" placeholder="codigo" />*@
+
+    <label>Descrição do genero</label>
+    <InputText class="form-control col-3" @bind-Value="genero.DescricaoGenero" placeholder="descrição" />
+
+    <input type="submit" value="Adicionar" />
+</EditForm>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Codigo</th>
+            <th scope="col">Descrição</th>
+        </tr>
+    </thead>
+    <tbody>
+        <ProjetoCinema.Client.Shared.Lists.ListGenero listaGeneros="ListaGeneros" />
+    </tbody>
+</table>
+
+<button @onclick="FormEdicao">Editar</button>
+
+<div style="display: @display">
+    <EditForm Model="@generoEdicao" OnValidSubmit="Editar">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <label>Codigo do genero</label>
+        <InputNumber class="form-control col-3" @bind-Value="generoEdicao.CodGenero" placeholder="codigo" />
+
+        <label>Descrição do genero</label>
+        <InputText class="form-control col-3" @bind-Value="generoEdicao.DescricaoGenero" placeholder="descrição" />
+
+        <input type="submit" value="Editar" />
+    </EditForm>
+
+
+</div>
+@code {
+    string display = "none";
+    public ProjetoCinema.Server.Models.Genero genero { get; set; }
+    public ProjetoCinema.Server.Models.Genero generoEdicao { get; set; }
+    List<ProjetoCinema.Server.Models.Genero> ListaGeneros;
+
+    protected async override Task OnInitializedAsync()
+    {
+        genero = new ProjetoCinema.Server.Models.Genero();
+        generoEdicao = new ProjetoCinema.Server.Models.Genero();
+        ListaGeneros = await generoRepository.GetGenres();
+        base.OnInitializedAsync();
+    }
+
+
+    private async Task Adicionar()
+    {
+        //ListaGeneros.Add(genero);
+        //genero = new CGenero();
+
+        try
+        {
+            await generoRepository.CreateGenero(genero);
+            ListaGeneros = await generoRepository.GetGenres();
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+    }
+    private async Task Editar()
+    {
+        Console.WriteLine("editando...");
+        generoRepository.UpdateGenre(generoEdicao);
+        ListaGeneros = await generoRepository.GetGenres();
+        //foreach (CGenero genero in ListaGeneros)
+        //{
+        //    if (generoEdicao.codigo == genero.codigo)
+        //    {
+        //        genero.descricao = generoEdicao.descricao;
+        //    }
+        //}
+    }
+
+    void FormEdicao()
+    {
+        if (display == "none") { display = "block"; } else { display = "none"; }
+    }
+
+
+}

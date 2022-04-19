@@ -1,0 +1,134 @@
+﻿@page "/sessao"
+@inject ISessaoRepository sessaoRepository
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@attribute [Authorize]
+<EditForm Model="@sessao" OnValidSubmit="@Adicionar">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    @*<label>Codigo da sessão</label>
+        <InputNumber class="form-control col-3" @bind-Value="sessao.CodSessao" placeholder="codigo" />*@
+
+    <label>Filme da sessão</label>
+    <InputNumber class="form-control col-3" @bind-Value="sessao.CodFilme" placeholder="filme" />
+
+    <label>Data da sessão</label>
+    <InputDate min="@DateTime.Now" class="form-control col-3" @bind-Value="sessao.DataSessao" placeholder="data" />
+
+    <label>Horario da sessão</label>
+    <input class="form-control col-3" type="datetime" @bind-value="sessao.HorarioSessao" />
+
+    <label>Sala da sessão</label>
+    <InputNumber class="form-control col-3" @bind-Value="sessao.CodSala" placeholder="sala" />
+
+    <label>Filial da sessão</label>
+    <InputNumber class="form-control col-3" @bind-Value="sessao.CodFilial" placeholder="sala" />
+
+    <label>Idioma da sessão</label>
+    <InputText class="form-control col-3" @bind-Value="sessao.Idioma" placeholder="idioma" />
+
+    <input type="submit" value="Adicionar" />
+</EditForm>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Codigo</th>
+            <th scope="col">Filme</th>
+            <th scope="col">Data</th>
+            <th scope="col">Horario</th>
+            <th scope="col">Sala</th>
+            <th scope="col">Filial</th>
+            <th scope="col">Idioma</th>
+        </tr>
+    </thead>
+    <tbody>
+        <ProjetoCinema.Client.Shared.Lists.ListSessao listaSessoes="listaSessoes" />
+    </tbody>
+</table>
+
+<button @onclick="FormEdicao">Editar</button>
+
+<div style="display: @display">
+    <EditForm Model="@sessaoEdicao" OnValidSubmit="Editar">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <label>Codigo da sessão</label>
+        <InputNumber class="form-control col-3" @bind-Value="sessaoEdicao.CodSessao" placeholder="codigo" />
+
+        <label>Filme da sessão</label>
+        <InputNumber class="form-control col-3" @bind-Value="sessaoEdicao.CodFilme" placeholder="filme" />
+
+        <label>Data da sessão</label>
+        <InputDate class="form-control col-3" @bind-Value="sessaoEdicao.DataSessao" placeholder="filme" />
+
+        <label>Horario da sessão</label>
+        <input class="form-control col-3" type="datetime" @bind-value="sessao.HorarioSessao" />
+
+        <label>Sala da sessão</label>
+        <InputNumber class="form-control col-3" @bind-Value="sessaoEdicao.CodSala" placeholder="sala" />
+
+        <label>Filial da sessão</label>
+        <InputNumber class="form-control col-3" @bind-Value="sessaoEdicao.CodFilial" placeholder="sala" />
+
+        <label>Idioma da sessão</label>
+        <InputText class="form-control col-3" @bind-Value="sessaoEdicao.Idioma" placeholder="idioma" />
+
+        <input type="submit" value="Editar" />
+    </EditForm>
+</div>
+@code {
+    string display = "none";
+    public ProjetoCinema.Server.Models.Sessao sessao { get; set; }
+    public ProjetoCinema.Server.Models.Sessao sessaoEdicao { get; set; }
+    List<ProjetoCinema.Server.Models.Sessao> listaSessoes;
+
+    protected async override Task OnInitializedAsync()
+    {
+        sessao = new ProjetoCinema.Server.Models.Sessao();
+        sessaoEdicao = new ProjetoCinema.Server.Models.Sessao();
+        listaSessoes = await sessaoRepository.GetSessoes();
+        base.OnInitializedAsync();
+    }
+    private async Task Adicionar()
+    {
+        try
+        {
+            await sessaoRepository.CreateSessao(sessao);
+            listaSessoes = await sessaoRepository.GetSessoes();
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+        //listaSessoes.Add(sessao);
+        //sessao = new CSessao();
+    }
+    private async Task Editar()
+    {
+        Console.WriteLine("editando...");
+        sessaoRepository.UpdateSessao(sessaoEdicao);
+        listaSessoes = await sessaoRepository.GetSessoes();
+        //foreach (CSessao sessao in listaSessoes)
+        //{
+        //    if (sessaoEdicao.codigo == sessao.codigo)
+        //    {
+        //        sessao.filme = sessaoEdicao.filme;
+        //        sessao.data = sessaoEdicao.data;
+        //        sessao.horario = sessaoEdicao.horario;
+        //        sessao.idioma = sessaoEdicao.idioma;
+        //        sessao.sala = sessaoEdicao.sala;
+        //    }
+        //}
+    }
+
+    void FormEdicao()
+    {
+        if (display == "none") { display = "block"; } else { display = "none"; }
+    }
+
+
+}

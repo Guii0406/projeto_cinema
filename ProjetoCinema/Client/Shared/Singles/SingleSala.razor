@@ -1,0 +1,16 @@
+﻿
+<tr>
+    <th scope="row">@sala.CodSala</th>
+    <th scope="row">@sala.CodFilial</th>
+    <td>@sala.DescricaoSala <button style="margin-left: 10px" @onclick="@(() => Excluir.InvokeAsync(sala))">X</button> </td>
+
+</tr>
+
+@code {
+    [Parameter] public ProjetoCinema.Server.Models.Sala sala { get; set; }
+    [Parameter] public EventCallback<ProjetoCinema.Server.Models.Sala> Excluir { get; set; }
+
+
+}
+
+

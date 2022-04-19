@@ -1,0 +1,79 @@
+﻿<div class="top-row pl-4 navbar navbar-dark">
+    <a class="navbar-brand" href="">ProjetoCinema</a>
+    <button class="navbar-toggler" @onclick="ToggleNavMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <ul class="nav flex-column">
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="filme">
+                <span class="oi oi-monitor" aria-hidden="true"></span> Filme
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="diretor">
+                <span class="oi oi-person" aria-hidden="true"></span> Diretor
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="genero">
+                <span class="oi oi-book" aria-hidden="true"></span> Gênero
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="sala">
+                <span class="oi oi-map" aria-hidden="true"></span> Sala
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="sessao">
+                <span class="oi oi-box" aria-hidden="true"></span> Sessão
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="venda">
+                <span class="oi oi-dollar" aria-hidden="true"></span> Venda
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="funcionario">
+                <span class="oi oi-people" aria-hidden="true"></span> Funcionário
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="fornecedor">
+                <span class="oi oi-share-boxed" aria-hidden="true"></span> Fornecedor
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="filial">
+                <span class="oi oi-home" aria-hidden="true"></span> Filial
+            </NavLink>
+        </li>
+
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="relatorios">
+                <span class="oi oi-paperclip" aria-hidden="true"></span> Relátorios
+            </NavLink>
+        </li>
+
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="chefia">
+                <span class="oi oi-paperclip" aria-hidden="true"></span> Chefias
+            </NavLink>
+        </li>
+    </ul>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}

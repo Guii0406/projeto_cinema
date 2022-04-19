@@ -1,0 +1,16 @@
+﻿
+<tr>
+    <th scope="row">@venda.CodVenda</th>
+    <th scope="row">@venda.ValorIngresso</th>
+    <th scope="row">@venda.CodFilial</th>
+    <th scope="row">@venda.DataVenda.ToShortDateString()</th>
+    <td>@venda.CodSessao <button style="margin-left: 10px" @onclick="@(() => Excluir.InvokeAsync(venda))">X</button> </td>
+
+</tr>
+
+@code {
+    [Parameter] public ProjetoCinema.Server.Models.Venda venda { get; set; }
+    [Parameter] public EventCallback<ProjetoCinema.Server.Models.Venda> Excluir { get; set; }
+
+
+}

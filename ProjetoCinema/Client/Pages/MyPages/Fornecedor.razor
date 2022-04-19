@@ -1,0 +1,93 @@
+﻿@page "/fornecedor"
+@inject IFornecedorRepository fornecedorRepository
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@attribute [Authorize]
+<EditForm Model="@fornecedor" OnValidSubmit="@Adicionar">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <label>Nome do fornecedor</label>
+    <InputText class="form-control col-3" @bind-Value="fornecedor.NomeFornecedor" placeholder="nome" />
+
+    <input type="submit" value="Adicionar" />
+</EditForm>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Codigo</th>
+            <th scope="col">Nome</th>
+        </tr>
+    </thead>
+    <tbody>
+        <ProjetoCinema.Client.Shared.Lists.ListFornecedor listaFornecedores="listaFornecedores" />
+    </tbody>
+</table>
+
+<button @onclick="FormEdicao">Editar</button>
+
+<div style="display: @display">
+    <EditForm Model="@fornecedorEdicao" OnValidSubmit="Editar">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <label>Codigo do fornecedor</label>
+        <InputNumber class="form-control col-3" @bind-Value="fornecedorEdicao.CodFornecedor" placeholder="codigo" />
+
+        <label>Nome do fornecedor</label>
+        <InputText class="form-control col-3" @bind-Value="fornecedorEdicao.NomeFornecedor" placeholder="nome" />
+
+        <input type="submit" value="Editar" />
+    </EditForm>
+</div>
+@code {
+    string display = "none";
+    public ProjetoCinema.Server.Models.Fornecedor fornecedor { get; set; }
+    public ProjetoCinema.Server.Models.Fornecedor fornecedorEdicao { get; set; }
+    List<ProjetoCinema.Server.Models.Fornecedor> listaFornecedores;
+
+    protected async override Task OnInitializedAsync()
+    {
+        fornecedor = new ProjetoCinema.Server.Models.Fornecedor();
+        fornecedorEdicao = new ProjetoCinema.Server.Models.Fornecedor();
+        listaFornecedores = await fornecedorRepository.GetFornecedores(); ;
+        base.OnInitializedAsync();
+    }
+    private async Task Adicionar()
+    {
+        //listaFornecedores.Add(fornecedor);
+        //fornecedor = new CFornecedor();
+
+        try
+        {
+            await fornecedorRepository.CreateFornecedor(fornecedor);
+            listaFornecedores = await fornecedorRepository.GetFornecedores();
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+    }
+    private async Task Editar()
+    {
+        Console.WriteLine("editando...");
+        fornecedorRepository.UpdateFornecedor(fornecedorEdicao);
+        listaFornecedores = await fornecedorRepository.GetFornecedores();
+        //foreach (CFornecedor fornecedor in listaFornecedores)
+        //{
+        //    if (fornecedorEdicao.codigo == fornecedor.codigo)
+        //    {
+        //        fornecedor.nome = fornecedorEdicao.nome;
+        //    }
+        //}
+    }
+
+    void FormEdicao()
+    {
+        if (display == "none") { display = "block"; } else { display = "none"; }
+    }
+
+
+}

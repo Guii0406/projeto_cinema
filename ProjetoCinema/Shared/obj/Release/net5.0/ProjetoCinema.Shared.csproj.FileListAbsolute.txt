@@ -1,0 +1,12 @@
+C:\Users\Administrator\source\repos\ProjetoCinema\ProjetoCinema\Shared\bin\Release\net5.0\ProjetoCinema.Shared.deps.json
+C:\Users\Administrator\source\repos\ProjetoCinema\ProjetoCinema\Shared\bin\Release\net5.0\ProjetoCinema.Shared.dll
+C:\Users\Administrator\source\repos\ProjetoCinema\ProjetoCinema\Shared\bin\Release\net5.0\ref\ProjetoCinema.Shared.dll
+C:\Users\Administrator\source\repos\ProjetoCinema\ProjetoCinema\Shared\bin\Release\net5.0\ProjetoCinema.Shared.pdb
+C:\Users\Administrator\source\repos\ProjetoCinema\ProjetoCinema\Shared\obj\Release\net5.0\ProjetoCinema.Shared.csprojAssemblyReference.cache
+C:\Users\Administrator\source\repos\ProjetoCinema\ProjetoCinema\Shared\obj\Release\net5.0\ProjetoCinema.Shared.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Administrator\source\repos\ProjetoCinema\ProjetoCinema\Shared\obj\Release\net5.0\ProjetoCinema.Shared.AssemblyInfoInputs.cache
+C:\Users\Administrator\source\repos\ProjetoCinema\ProjetoCinema\Shared\obj\Release\net5.0\ProjetoCinema.Shared.AssemblyInfo.cs
+C:\Users\Administrator\source\repos\ProjetoCinema\ProjetoCinema\Shared\obj\Release\net5.0\ProjetoCinema.Shared.csproj.CoreCompileInputs.cache
+C:\Users\Administrator\source\repos\ProjetoCinema\ProjetoCinema\Shared\obj\Release\net5.0\ProjetoCinema.Shared.dll
+C:\Users\Administrator\source\repos\ProjetoCinema\ProjetoCinema\Shared\obj\Release\net5.0\ref\ProjetoCinema.Shared.dll
+C:\Users\Administrator\source\repos\ProjetoCinema\ProjetoCinema\Shared\obj\Release\net5.0\ProjetoCinema.Shared.pdb

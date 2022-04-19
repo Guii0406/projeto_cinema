@@ -1,0 +1,15 @@
+﻿
+<tr>
+    <th scope="row">@chefia.CodChefia</th>
+    <th scope="row">@chefia.CodFuncionarioChefe</th>
+    <td>@chefia.CodFuncionario <button style="margin-left: 10px" @onclick="@(() => Excluir.InvokeAsync(chefia))">X</button> </td>
+
+</tr>
+
+@code {
+    [Parameter] public ProjetoCinema.Server.Models.Chefia chefia { get; set; }
+    [Parameter] public EventCallback<ProjetoCinema.Server.Models.Chefia> Excluir { get; set; }
+
+
+}
+

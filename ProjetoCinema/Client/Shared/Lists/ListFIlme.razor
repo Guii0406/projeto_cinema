@@ -1,0 +1,47 @@
+﻿@inject IFilmeRepository filmeRepository
+<GenericList Lista="listaFilmes">
+    <NullTemplate><p>Loading...</p></NullTemplate>
+
+    <EmptyTemplate><p>Nada encontrado...</p></EmptyTemplate>
+
+    <ElementTemplate Context="ctxFilme">
+
+        <ProjetoCinema.Client.Shared.Singles.SingleFilme filme="ctxFilme" Excluir="Excluir" />
+
+    </ElementTemplate>
+
+</GenericList>
+
+<ProjetoCinema.Client.Shared.Dialog.ConfirmationDialog Titulo="Atenção!" @ref="confirmation" onCancel="onCancel" onConfirm="onConfirm">
+    <div>Deseja apagar este item?</div>
+</ProjetoCinema.Client.Shared.Dialog.ConfirmationDialog>
+
+@code {
+    ConfirmationDialog confirmation;
+    [Parameter] public List<ProjetoCinema.Server.Models.Filme> listaFilmes { get; set; }
+    ProjetoCinema.Server.Models.Filme filmeToDelete;
+
+    private async Task onConfirm()
+    {
+        await filmeRepository.DeleteFilme(filmeToDelete.CodFilme);
+        listaFilmes = await filmeRepository.GetFilmes();
+        confirmation.Hide();
+        filmeToDelete = null;
+    }
+
+    void onCancel()
+    {
+        confirmation.Hide();
+        filmeToDelete = null;
+    }
+
+    public void Excluir(ProjetoCinema.Server.Models.Filme filme
+        )
+    {
+        filmeToDelete = filme;
+        confirmation.Show();
+    }
+
+}
+
+

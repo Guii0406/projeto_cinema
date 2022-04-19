@@ -1,0 +1,130 @@
+﻿@page "/filme"
+@inject IFilmeRepository filmeRepository
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@attribute [Authorize]
+<EditForm Model="@filme" OnValidSubmit="@Adicionar">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    @*<label>Codigo do filme</label>
+        <InputNumber class="form-control col-3" @bind-Value="filme.codigo" placeholder="codigo" />*@
+
+    <label>Titúlo do filme</label>
+    <InputText class="form-control col-3" @bind-Value="filme.TituloFilme" placeholder="titúlo" />
+
+    <label>Data de lançamento do filme</label>
+    <InputDate class="form-control col-3" @bind-Value="filme.Lancamento" placeholder="data" />
+
+    <label>Diretor do filme</label>
+    <InputNumber class="form-control col-3" @bind-Value="filme.CodDiretor" placeholder="diretor" />
+
+    <label>Gênero do filme</label>
+    <InputNumber class="form-control col-3" @bind-Value="filme.CodGenero" placeholder="genero" />
+
+    <label>Fornecedor do filme</label>
+    <InputNumber class="form-control col-3" @bind-Value="filme.CodFornecedor" placeholder="fornecedor" />
+
+
+    <input type="submit" value="Adicionar" />
+</EditForm>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Codigo</th>
+            <th scope="col">Titúlo</th>
+            <th scope="col">Data de lançamento</th>
+            <th scope="col">Diretor</th>
+            <th scope="col">Gênero</th>
+            <th scope="col">Fornecedor</th>
+        </tr>
+    </thead>
+    <tbody>
+        <ProjetoCinema.Client.Shared.Lists.ListFIlme listaFilmes="listaFilmes" />
+    </tbody>
+</table>
+
+<button @onclick="FormEdicao">Editar</button>
+
+<div style="display: @display">
+    <EditForm Model="@filmeEdicao" OnValidSubmit="Editar">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <label>Codigo do filme</label>
+        <InputNumber class="form-control col-3" @bind-Value="filmeEdicao.CodFilme" placeholder="codigo" />
+
+        <label>Titúlo do filme</label>
+        <InputText class="form-control col-3" @bind-Value="filmeEdicao.TituloFilme" placeholder="titúlo" />
+
+        <label>Data de lançamento do filme</label>
+        <InputDate class="form-control col-3" @bind-Value="filmeEdicao.Lancamento" placeholder="data" />
+
+        <label>Diretor do filme</label>
+        <InputNumber class="form-control col-3" @bind-Value="filmeEdicao.CodDiretor" placeholder="diretor" />
+
+        <label>Gênero do filme</label>
+        <InputNumber class="form-control col-3" @bind-Value="filmeEdicao.CodGenero" placeholder="genero" />
+
+        <label>Fornecedor do filme</label>
+        <InputNumber class="form-control col-3" @bind-Value="filme.CodFornecedor" placeholder="fornecedor" />
+
+        <input type="submit" value="Editar" />
+    </EditForm>
+</div>
+@code {
+    string display = "none";
+    public ProjetoCinema.Server.Models.Filme filme { get; set; }
+    public ProjetoCinema.Server.Models.Filme filmeEdicao { get; set; }
+    List<ProjetoCinema.Server.Models.Filme> listaFilmes;
+
+    protected async override Task OnInitializedAsync()
+    {
+        filme = new ProjetoCinema.Server.Models.Filme();
+        filmeEdicao = new ProjetoCinema.Server.Models.Filme();
+        listaFilmes = await filmeRepository.GetFilmes();
+        base.OnInitializedAsync();
+    }
+    private async Task Adicionar()
+    {
+        try
+        {
+            await filmeRepository.CreateFilme(filme);
+            listaFilmes = await filmeRepository.GetFilmes();
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+        //listaFilmes.Add(filme);
+        //filme = new CFilme();
+    }
+    private async Task Editar()
+    {
+        Console.WriteLine("editando...");
+
+        Console.WriteLine("editando...");
+        filmeRepository.UpdateFilmes(filmeEdicao);
+        listaFilmes = await filmeRepository.GetFilmes();
+        //foreach (CFilme filme in listaFilmes)
+        //{
+        //    if (filmeEdicao.codigo == filme.codigo)
+        //    {
+        //        filme.titulo = filmeEdicao.titulo;
+        //        filme.diretor = filmeEdicao.diretor;
+        //        filme.data = filmeEdicao.data;
+        //        filme.fornecedor = filmeEdicao.fornecedor;
+        //        filme.genero = filmeEdicao.genero;
+        //    }
+        //}
+    }
+
+    void FormEdicao()
+    {
+        if (display == "none") { display = "block"; } else { display = "none"; }
+    }
+
+
+}

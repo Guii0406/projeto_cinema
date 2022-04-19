@@ -1,0 +1,13 @@
+﻿
+<tr>
+    <th scope="row">@fornecedor.CodFornecedor</th>
+    <td>@fornecedor.NomeFornecedor<button style="margin-left: 10px" @onclick="@(() => Excluir.InvokeAsync(fornecedor))">X</button> </td>
+
+</tr>
+
+@code {
+    [Parameter] public ProjetoCinema.Server.Models.Fornecedor fornecedor { get; set; }
+    [Parameter] public EventCallback<ProjetoCinema.Server.Models.Fornecedor> Excluir { get; set; }
+
+
+}

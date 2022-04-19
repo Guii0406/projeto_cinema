@@ -1,0 +1,18 @@
+﻿
+<tr>
+    <th scope="row">@funcionario.CodFuncionario</th>
+    <th scope="row">@funcionario.CodFilial</th>
+    <th scope="row">@funcionario.NomeFuncionario</th>
+    <th scope="row">@funcionario.SalarioMensal</th>
+    <td>@funcionario.Setores <button style="margin-left: 10px" @onclick="@(() => Excluir.InvokeAsync(funcionario))">X</button> </td>
+
+</tr>
+
+@code {
+    [Parameter] public ProjetoCinema.Server.Models.Funcionario funcionario { get; set; }
+    [Parameter] public EventCallback<ProjetoCinema.Server.Models.Funcionario> Excluir { get; set; }
+
+
+}
+
+

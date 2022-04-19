@@ -1,0 +1,16 @@
+﻿
+<tr>
+    <th scope="row">@filial.CodFilial</th>
+    <th scope="row">@filial.Endereco</th>
+    <th scope="row">@filial.Telefone</th>
+    <td>@filial.DescricaoFilial <button style="margin-left: 10px" @onclick="@(() => Excluir.InvokeAsync(filial))">X</button> </td>
+
+</tr>
+
+@code {
+    [Parameter] public ProjetoCinema.Server.Models.Filial filial { get; set; }
+    [Parameter] public EventCallback<ProjetoCinema.Server.Models.Filial> Excluir { get; set; }
+
+
+}
+

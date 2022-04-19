@@ -1,0 +1,19 @@
+﻿
+<tr>
+    <th scope="row">@filme.CodFilme</th>
+    <th scope="row">@filme.TituloFilme</th>
+    <th scope="row">@filme.Lancamento.ToShortDateString()</th>
+    <th scope="row">@filme.CodDiretor</th>
+    <th scope="row">@filme.CodGenero</th>
+    <td>@filme.CodFornecedor<button style="margin-left: 10px" @onclick="@(() => Excluir.InvokeAsync(filme))">X</button> </td>
+
+</tr>
+
+@code {
+    [Parameter] public ProjetoCinema.Server.Models.Filme filme { get; set; }
+    [Parameter] public EventCallback<ProjetoCinema.Server.Models.Filme> Excluir { get; set; }
+
+
+}
+
+

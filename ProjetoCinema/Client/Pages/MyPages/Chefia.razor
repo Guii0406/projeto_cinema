@@ -1,0 +1,108 @@
+﻿@page "/chefia"
+@inject IChefiaRepository chefiaRepository
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@attribute [Authorize]
+<EditForm Model="@chefia" OnValidSubmit="@Adicionar">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    @*<label>Codigo do genero</label>
+        <InputNumber class="form-control col-3" @bind-Value="genero.codigo" placeholder="codigo" />*@
+
+    <label>Chefia</label>
+    <InputNumber class="form-control col-3" @bind-Value="chefia.CodFuncionarioChefe" placeholder="chefia" />
+
+    <label>Funcionario</label>
+    <InputNumber class="form-control col-3" @bind-Value="chefia.CodFuncionario" placeholder="funcionario" />
+
+    <input type="submit" value="Adicionar" />
+</EditForm>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Codigo</th>
+            <th scope="col">Funcionário chefe</th>
+            <th scope="col">Funcionário</th>
+        </tr>
+    </thead>
+    <tbody>
+        <ProjetoCinema.Client.Shared.Lists.ListChefia listaChefias="ListaChefias" />
+    </tbody>
+</table>
+
+<button @onclick="FormEdicao">Editar</button>
+
+<div style="display: @display">
+    <EditForm Model="@chefiaEdicao" OnValidSubmit="Editar">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <label>Codigo</label>
+        <InputNumber class="form-control col-3" @bind-Value="chefiaEdicao.CodChefia" placeholder="chefia" />
+
+        <label>Chefia</label>
+        <InputNumber class="form-control col-3" @bind-Value="chefiaEdicao.CodFuncionarioChefe" placeholder="chefia" />
+
+        <label>Funcionario</label>
+        <InputNumber class="form-control col-3" @bind-Value="chefiaEdicao.CodFuncionario" placeholder="funcionario" />
+
+        <input type="submit" value="Editar" />
+    </EditForm>
+
+
+</div>
+@code {
+    string display = "none";
+    public ProjetoCinema.Server.Models.Chefia chefia { get; set; }
+    public ProjetoCinema.Server.Models.Chefia chefiaEdicao { get; set; }
+    List<ProjetoCinema.Server.Models.Chefia> ListaChefias;
+
+    protected async override Task OnInitializedAsync()
+    {
+        chefia = new ProjetoCinema.Server.Models.Chefia();
+        chefiaEdicao = new ProjetoCinema.Server.Models.Chefia();
+        ListaChefias = await chefiaRepository.GetChefias();
+        base.OnInitializedAsync();
+    }
+
+
+    private async Task Adicionar()
+    {
+        //ListaGeneros.Add(genero);
+        //genero = new CGenero();
+
+        try
+        {
+            await chefiaRepository.CreateChefia(chefia);
+            ListaChefias = await chefiaRepository.GetChefias();
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+    }
+    private async Task Editar()
+    {
+        Console.WriteLine("editando...");
+        chefiaRepository.UpdateChefia(chefiaEdicao);
+        ListaChefias = await chefiaRepository.GetChefias();
+        //foreach (CGenero genero in ListaGeneros)
+        //{
+        //    if (generoEdicao.codigo == genero.codigo)
+        //    {
+        //        genero.descricao = generoEdicao.descricao;
+        //    }
+        //}
+    }
+
+    void FormEdicao()
+    {
+        if (display == "none") { display = "block"; } else { display = "none"; }
+    }
+
+
+}
+

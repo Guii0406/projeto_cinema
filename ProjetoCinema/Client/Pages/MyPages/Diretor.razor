@@ -1,0 +1,96 @@
+﻿@page "/diretor"
+@inject IDiretorRepository diretorRepository
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@attribute [Authorize]
+<EditForm Model="@diretor" OnValidSubmit="@Adicionar">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    @*<label>Codigo do diretor</label>
+        <InputNumber class="form-control col-3" @bind-Value="diretor.codigo" placeholder="codigo" />*@
+
+    <label>Nome do diretor</label>
+    <InputText class="form-control col-3" @bind-Value="diretor.NomeDiretor" placeholder="nome" />
+
+    <input type="submit" value="Adicionar" />
+</EditForm>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Codigo</th>
+            <th scope="col">Nome</th>
+        </tr>
+    </thead>
+    <tbody>
+        <ProjetoCinema.Client.Shared.Lists.ListDiretor listaDiretores="listaDiretores" />
+    </tbody>
+</table>
+
+<button @onclick="FormEdicao">Editar</button>
+
+<div style="display: @display">
+    <EditForm Model="@diretorEdicao" OnValidSubmit="Editar">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <label>Codigo do diretor</label>
+        <InputNumber class="form-control col-3" @bind-Value="diretorEdicao.CodDiretor" placeholder="codigo" />
+
+        <label>Nome do diretor</label>
+        <InputText class="form-control col-3" @bind-Value="diretorEdicao.NomeDiretor" placeholder="nome" />
+
+        <input type="submit" value="Editar" />
+    </EditForm>
+</div>
+@code {
+    string display = "none";
+    public ProjetoCinema.Server.Models.Diretor diretor { get; set; }
+    public ProjetoCinema.Server.Models.Diretor diretorEdicao { get; set; }
+    List<ProjetoCinema.Server.Models.Diretor> listaDiretores;
+
+    protected async override Task OnInitializedAsync()
+    {
+        diretor = new ProjetoCinema.Server.Models.Diretor();
+        diretorEdicao = new ProjetoCinema.Server.Models.Diretor();
+        listaDiretores = await diretorRepository.GetDiretores();
+        base.OnInitializedAsync();
+    }
+    private async Task Adicionar()
+    {
+        try
+        {
+            await diretorRepository.CreateDiretor(diretor);
+            listaDiretores = await diretorRepository.GetDiretores();
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+        //listaDiretores.Add(diretor);
+        //diretor = new CDiretor();
+    }
+    private async Task Editar()
+    {
+        Console.WriteLine("editando...");
+        Console.WriteLine("editando...");
+        diretorRepository.UpdateDiretor(diretorEdicao);
+        listaDiretores = await diretorRepository.GetDiretores();
+        //foreach (CDiretor diretor in listaDiretores)
+        //{
+        //    if (diretorEdicao.codigo == diretor.codigo)
+        //    {
+        //        diretor.nome = diretorEdicao.nome;
+        //    }
+        //}
+    }
+
+    void FormEdicao()
+    {
+        if (display == "none") { display = "block"; } else { display = "none"; }
+    }
+
+
+}

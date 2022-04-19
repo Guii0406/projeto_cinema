@@ -1,0 +1,123 @@
+﻿@page "/funcionario"
+@inject IFuncionarioRepository funcionarioRepository
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@attribute [Authorize]
+<EditForm Model="@funcionario" OnValidSubmit="@Adicionar">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <label>Codigo da filial</label>
+    <InputNumber class="form-control col-3" @bind-Value="funcionario.CodFilial" placeholder="codigo" />
+
+    <label>Nome do funcionário</label>
+    <InputText class="form-control col-3" @bind-Value="funcionario.NomeFuncionario" placeholder="nome" />
+
+    <label>Salario do funcionario</label>
+    <InputNumber class="form-control col-3" @bind-Value="funcionario.SalarioMensal" placeholder="salario" />
+
+    <label>Setor do funcionário</label>
+    <InputText class="form-control col-3" @bind-Value="funcionario.Setores" placeholder="setor" />
+
+    @*<label>Chefia do funcionário</label>
+        <InputNumber class="form-control col-3" @bind-Value="funcionario.Chefia" placeholder="chefia" />*@
+
+    <input type="submit" value="Adicionar" />
+</EditForm>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Codigo</th>
+            <th scope="col">Codigo da Filial</th>
+            <th scope="col">Nome</th>
+            <th scope="col">Salário</th>
+            <th scope="col">Setor</th>
+            @*<th scope="col">Chefia</th>*@
+        </tr>
+    </thead>
+    <tbody>
+        <ProjetoCinema.Client.Shared.Lists.ListFuncionario listaFuncionarios="listaFuncionarios" />
+    </tbody>
+</table>
+
+<button @onclick="FormEdicao">Editar</button>
+
+<div style="display: @display">
+    <EditForm Model="@funcionarioEdicao" OnValidSubmit="Editar">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <label>Codigo do funcionário</label>
+        <InputNumber class="form-control col-3" @bind-Value="funcionarioEdicao.CodFuncionario" placeholder="codigo" />
+
+        <label>Codigo da filial</label>
+        <InputNumber class="form-control col-3" @bind-Value="funcionarioEdicao.CodFilial" placeholder="codigo" />
+
+        <label>Nome do funcionário</label>
+        <InputText class="form-control col-3" @bind-Value="funcionarioEdicao.NomeFuncionario" placeholder="nome" />
+
+        <label>Salario do funcionario</label>
+        <InputNumber class="form-control col-3" @bind-Value="funcionarioEdicao.SalarioMensal" placeholder="salario" />
+
+        <label>Setor do funcionário</label>
+        <InputText class="form-control col-3" @bind-Value="funcionarioEdicao.Setores" placeholder="setor" />
+
+        @*<label>Chefia do funcionário</label>
+            <InputNumber class="form-control col-3" @bind-Value="funcionarioEdicao.Chefia" placeholder="chefia" />*@
+
+        <input type="submit" value="Editar" />
+    </EditForm>
+</div>
+@code {
+    string display = "none";
+    public ProjetoCinema.Server.Models.Funcionario funcionario { get; set; }
+    public ProjetoCinema.Server.Models.Funcionario funcionarioEdicao { get; set; }
+    List<ProjetoCinema.Server.Models.Funcionario> listaFuncionarios;
+
+    protected async override Task OnInitializedAsync()
+    {
+        funcionario = new ProjetoCinema.Server.Models.Funcionario();
+        funcionarioEdicao = new ProjetoCinema.Server.Models.Funcionario();
+        listaFuncionarios = await funcionarioRepository.GetFuncionarios();
+        base.OnInitializedAsync();
+    }
+    private async Task Adicionar()
+    {
+        try
+        {
+            await funcionarioRepository.CreateFuncionario(funcionario);
+            listaFuncionarios = await funcionarioRepository.GetFuncionarios();
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+        //listaFuncionarios.Add(funcionario);
+        //funcionario = new CFuncionario();
+    }
+    private async Task Editar()
+    {
+        Console.WriteLine("editando...");
+        funcionarioRepository.UpdateFuncionario(funcionarioEdicao);
+        listaFuncionarios = await funcionarioRepository.GetFuncionarios();
+        //foreach (CFuncionario funcionario in listaFuncionarios)
+        //{
+        //    if (funcionarioEdicao.codigo == funcionario.codigo)
+        //    {
+        //        funcionario.nome = funcionarioEdicao.nome;
+        //        funcionario.setor = funcionarioEdicao.setor;
+        //        funcionario.chefia = funcionarioEdicao.chefia;
+        //        funcionario.salarioMensal = funcionarioEdicao.salarioMensal;
+        //    }
+        //}
+    }
+
+    void FormEdicao()
+    {
+        if (display == "none") { display = "block"; } else { display = "none"; }
+    }
+
+
+}

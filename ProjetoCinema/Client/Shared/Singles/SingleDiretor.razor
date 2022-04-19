@@ -1,0 +1,14 @@
+﻿
+<tr>
+    <th scope="row">@diretor.CodDiretor</th>
+    <td>@diretor.NomeDiretor <button style="margin-left: 10px" @onclick="@(() => Excluir.InvokeAsync(diretor))">X</button> </td>
+
+</tr>
+
+@code {
+    [Parameter] public ProjetoCinema.Server.Models.Diretor diretor { get; set; }
+    [Parameter] public EventCallback<ProjetoCinema.Server.Models.Diretor> Excluir { get; set; }
+
+
+}
+

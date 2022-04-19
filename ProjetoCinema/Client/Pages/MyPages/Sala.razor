@@ -1,0 +1,101 @@
+﻿@page "/sala"
+@inject ISalaRepository salaRepository
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@attribute [Authorize]
+<EditForm Model="@sala" OnValidSubmit="@Adicionar">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    @*<label>Codigo da sala</label>
+        <InputNumber class="form-control col-3" @bind-Value="sala.codigo" placeholder="codigo" />*@
+
+    <label>Descrição da sala</label>
+    <InputText class="form-control col-3" @bind-Value="sala.DescricaoSala" placeholder="descrição" />
+
+    <label>Codigo filial</label>
+    <InputNumber class="form-control col-3" @bind-Value="sala.CodFilial" placeholder="Codigo filial" />
+
+    <input type="submit" value="Adicionar" />
+</EditForm>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Codigo</th>
+            <th scope="col">Codigo Filial</th>
+            <th scope="col">Descrição</th>
+        </tr>
+    </thead>
+    <tbody>
+        <ProjetoCinema.Client.Shared.Lists.ListSala listaSalas="listaSalas" />
+    </tbody>
+</table>
+
+<button @onclick="FormEdicao">Editar</button>
+
+<div style="display: @display">
+    <EditForm Model="@salaEdicao" OnValidSubmit="Editar">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <label>Codigo da sala</label>
+        <InputNumber class="form-control col-3" @bind-Value="salaEdicao.CodSala" placeholder="codigo" />
+
+        <label>Descrição da sala</label>
+        <InputText class="form-control col-3" @bind-Value="salaEdicao.DescricaoSala" placeholder="descrição" />
+
+        <input type="submit" value="Editar" />
+    </EditForm>
+</div>
+@code {
+    string display = "none";
+    public ProjetoCinema.Server.Models.Sala sala { get; set; }
+    public ProjetoCinema.Server.Models.Sala salaEdicao { get; set; }
+    List<ProjetoCinema.Server.Models.Sala> listaSalas;
+
+    protected async override Task OnInitializedAsync()
+    {
+        sala = new ProjetoCinema.Server.Models.Sala();
+        salaEdicao = new ProjetoCinema.Server.Models.Sala();
+        listaSalas = await salaRepository.GetSalas();
+        base.OnInitializedAsync();
+    }
+    private async Task Adicionar()
+    {
+        //ListaGeneros.Add(genero);
+        //genero = new CGenero();
+
+        try
+        {
+            await salaRepository.CreateSala(sala);
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+    }
+    private async Task Editar()
+    {
+        Console.WriteLine("editando...");
+        ProjetoCinema.Server.Models.Sala codfilial = await salaRepository.GetSala(salaEdicao.CodSala);
+        salaEdicao.CodFilial = codfilial.CodFilial;
+        salaRepository.UpdateSala(salaEdicao);
+        listaSalas = await salaRepository.GetSalas();
+        //foreach (CSala sala in listaSalas)
+        //{
+        //    if (salaEdicao.codigo == sala.codigo)
+        //    {
+        //        sala.descricao = salaEdicao.descricao;
+        //    }
+        //}
+    }
+
+    void FormEdicao()
+    {
+        if (display == "none") { display = "block"; } else { display = "none"; }
+    }
+
+
+}

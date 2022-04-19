@@ -1,0 +1,115 @@
+﻿@page "/filial"
+@inject IFilialRepository filialRepository
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@attribute [Authorize]
+<EditForm Model="@filial" OnValidSubmit="@Adicionar">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    @*<label>Codigo do genero</label>
+        <InputNumber class="form-control col-3" @bind-Value="genero.codigo" placeholder="codigo" />*@
+
+    <label>Descrição da filial</label>
+    <InputText class="form-control col-3" @bind-Value="filial.DescricaoFilial" placeholder="descrição" />
+
+    <label>Endereço da filial</label>
+    <InputText class="form-control col-3" @bind-Value="filial.Endereco" placeholder="endereço" />
+
+    <label>Telefone da filial</label>
+    <InputText class="form-control col-3" @bind-Value="filial.Telefone" placeholder="telefone" />
+
+    <input type="submit" value="Adicionar" />
+</EditForm>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Codigo</th>
+            <th scope="col">Endereço</th>
+            <th scope="col">Telefone</th>
+            <th scope="col">Descrição</th>
+        </tr>
+    </thead>
+    <tbody>
+        <ProjetoCinema.Client.Shared.Lists.ListFilial listaFiliais="ListaFiliais" />
+    </tbody>
+</table>
+
+<button @onclick="FormEdicao">Editar</button>
+
+<div style="display: @display">
+    <EditForm Model="@filialEdicao" OnValidSubmit="Editar">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <label>Codigo da filial</label>
+        <InputNumber class="form-control col-3" @bind-Value="filialEdicao.CodFilial" placeholder="codigo" />
+
+        <label>Descrição da filial</label>
+        <InputText class="form-control col-3" @bind-Value="filialEdicao.DescricaoFilial" placeholder="descrição" />
+
+        <label>Endereço da filial</label>
+        <InputText class="form-control col-3" @bind-Value="filialEdicao.Endereco" placeholder="endereço" />
+
+        <label>Telefone da filial</label>
+        <InputText class="form-control col-3" @bind-Value="filialEdicao.Telefone" placeholder="telefone" />
+
+        <input type="submit" value="Editar" />
+    </EditForm>
+
+
+</div>
+@code {
+    string display = "none";
+    public ProjetoCinema.Server.Models.Filial filial { get; set; }
+    public ProjetoCinema.Server.Models.Filial filialEdicao { get; set; }
+    List<ProjetoCinema.Server.Models.Filial> ListaFiliais;
+
+    protected async override Task OnInitializedAsync()
+    {
+        filial = new ProjetoCinema.Server.Models.Filial();
+        filialEdicao = new ProjetoCinema.Server.Models.Filial();
+        ListaFiliais = await filialRepository.GetFiliais();
+        base.OnInitializedAsync();
+    }
+
+
+    private async Task Adicionar()
+    {
+        //ListaGeneros.Add(genero);
+        //genero = new CGenero();
+
+        try
+        {
+            await filialRepository.CreateFilial(filial);
+            ListaFiliais = await filialRepository.GetFiliais();
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+    }
+    private async Task Editar()
+    {
+        Console.WriteLine("editando...");
+        filialRepository.UpdateFilial(filialEdicao);
+        ListaFiliais = await filialRepository.GetFiliais();
+        //foreach (CGenero genero in ListaGeneros)
+        //{
+        //    if (generoEdicao.codigo == genero.codigo)
+        //    {
+        //        genero.descricao = generoEdicao.descricao;
+        //    }
+        //}
+    }
+
+    void FormEdicao()
+    {
+        if (display == "none") { display = "block"; } else { display = "none"; }
+    }
+
+
+}
+

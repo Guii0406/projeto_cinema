@@ -1,0 +1,102 @@
+﻿@page "/relatorios"
+@inject IVendaRepository vendaRepository
+@inject IFuncionarioRepository funcionarioRepository
+<label>Mês</label>
+<a style="color:blue;cursor:pointer;margin-left:5px;" @onclick="() => mes(1)">Janeiro</a>
+<a style="color:blue;cursor:pointer;margin-left:5px;" @onclick="() => mes(2)">Fevereiro</a>
+<a style="color:blue;cursor:pointer;margin-left:5px;" @onclick="() => mes(3)">Março</a>
+<a style="color:blue;cursor:pointer;margin-left:5px;"@onclick="() => mes(4)">Abril</a>
+<a style="color:blue;cursor:pointer;margin-left:5px;"@onclick="() => mes(5)">Maio</a>
+<a style="color:blue;cursor:pointer;margin-left:5px;"@onclick="() => mes(6)">Junho</a>
+<a style="color:blue;cursor:pointer;margin-left:5px;"@onclick="() => mes(7)">Julho</a>
+<a style="color:blue;cursor:pointer;margin-left:5px;"@onclick="() => mes(8)">Agosto</a>
+<a style="color:blue;cursor:pointer;margin-left:5px;"@onclick="() => mes(9)">Setembro</a>
+<a style="color:blue;cursor:pointer;margin-left:5px;" @onclick="() => mes(10)">Outubro</a>
+<a style="color:blue;cursor:pointer;margin-left:5px;"@onclick="() => mes(11)">Novembro</a>
+<a style="color:blue;cursor:pointer;margin-left:5px;"@onclick="() => mes(12)">Dezembro</a>
+
+<h2>Vendas</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Valor</th>
+            <th scope="col">Data</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (listaVendas == null || listaVendas.Count == 0)
+        {
+            <label> aguarde...</label>
+        }
+        else
+        {
+            foreach (ProjetoCinema.Server.Models.Venda v in listaVendas)
+            {
+                if (MesFiltrado == v.DataVenda.Month)
+                {
+                    totalVendas += v.ValorIngresso;
+                    <tr>
+                        <th scope="row">@v.ValorIngresso</th>
+                        <th scope="row">@v.DataVenda.ToShortDateString()</th>
+                    </tr>
+                }
+            }
+            <tr> <b>Total:</b> @totalVendas</tr>
+        }
+    </tbody>
+</table>
+<hr />
+<hr />
+<hr />
+<hr />
+<h2>Pagamentos</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Valor</th>
+            <th scope="col">Funcionário</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (listaFuncionarios == null || listaFuncionarios.Count == 0)
+        {
+            <label> aguarde...</label>
+        }
+        else
+        {
+            foreach (ProjetoCinema.Server.Models.Funcionario f in listaFuncionarios)
+            {
+                totalPagamentos += (decimal)f.SalarioMensal;
+                <tr>
+                    <th scope="row">@f.SalarioMensal</th>
+                    <th scope="row">@f.NomeFuncionario</th>
+                </tr>
+            }
+            <tr> <b>Total:</b> @totalPagamentos</tr>
+        }
+    </tbody>
+</table>
+
+
+@code{
+    List<ProjetoCinema.Server.Models.Venda> listaVendas;
+    List<ProjetoCinema.Server.Models.Funcionario> listaFuncionarios;
+    public int MesFiltrado { get; set; } = 1;
+    decimal totalVendas = 0;
+    decimal totalPagamentos = 0;
+
+    protected async override Task OnInitializedAsync()
+    {
+        listaVendas = await vendaRepository.GetVendas();
+        listaFuncionarios = await funcionarioRepository.GetFuncionarios();
+        base.OnInitializedAsync();
+    }
+
+    void mes(int mes)
+    {
+        MesFiltrado = mes;
+        totalVendas = 0;
+        totalPagamentos = 0;
+    }
+}

@@ -1,0 +1,46 @@
+﻿@inject IGeneroRepository generorepository
+<GenericList Lista="listaGeneros">
+    <NullTemplate><p>Loading...</p></NullTemplate>
+
+    <EmptyTemplate><p>Nada encontrado...</p></EmptyTemplate>
+
+    <ElementTemplate Context="ctxGenero" >
+        
+        <ProjetoCinema.Client.Shared.Singles.SingleGenero genero="ctxGenero" Excluir="Excluir" />
+       
+    </ElementTemplate>
+       
+</GenericList>
+
+<ProjetoCinema.Client.Shared.Dialog.ConfirmationDialog Titulo="Atenção!" @ref="confirmation" onCancel="onCancel" onConfirm="onConfirm">
+    <div>Deseja apagar este item?</div>
+</ProjetoCinema.Client.Shared.Dialog.ConfirmationDialog>
+
+@code {
+    ConfirmationDialog confirmation;
+    [Parameter] public List<ProjetoCinema.Server.Models.Genero> listaGeneros { get; set; }
+    ProjetoCinema.Server.Models.Genero generoToDelete;
+
+    private async Task onConfirm()
+    {
+
+        //listaGeneros.Remove(generoToDelete);
+        await generorepository.DeleteGenre(generoToDelete.CodGenero);
+        listaGeneros = await generorepository.GetGenres();
+        confirmation.Hide();
+        generoToDelete = null;
+    }
+
+    void onCancel()
+    {
+        confirmation.Hide();
+        generoToDelete = null;
+    }
+
+    public void Excluir(ProjetoCinema.Server.Models.Genero genero)
+    {
+        generoToDelete = genero;
+        confirmation.Show();
+    }
+
+}

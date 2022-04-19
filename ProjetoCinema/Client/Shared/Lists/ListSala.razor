@@ -1,0 +1,45 @@
+﻿@inject ISalaRepository salaRepository
+<GenericList Lista="listaSalas">
+    <NullTemplate><p>Loading...</p></NullTemplate>
+
+    <EmptyTemplate><p>Nada encontrado...</p></EmptyTemplate>
+
+    <ElementTemplate Context="ctxSala">
+
+        <ProjetoCinema.Client.Shared.Singles.SingleSala sala="ctxSala" Excluir="Excluir" />
+
+    </ElementTemplate>
+
+</GenericList>
+
+<ProjetoCinema.Client.Shared.Dialog.ConfirmationDialog Titulo="Atenção!" @ref="confirmation" onCancel="onCancel" onConfirm="onConfirm">
+    <div>Deseja apagar este item?</div>
+</ProjetoCinema.Client.Shared.Dialog.ConfirmationDialog>
+
+@code {
+    ConfirmationDialog confirmation;
+    [Parameter] public List<ProjetoCinema.Server.Models.Sala> listaSalas { get; set; }
+    ProjetoCinema.Server.Models.Sala salaToDelete;
+
+    private async Task onConfirm()
+    {
+        await salaRepository.DeleteSala(salaToDelete.CodSala);
+        listaSalas = await salaRepository.GetSalas();
+        confirmation.Hide();
+        salaToDelete = null;
+    }
+
+    void onCancel()
+    {
+        confirmation.Hide();
+        salaToDelete = null;
+    }
+
+    public void Excluir(ProjetoCinema.Server.Models.Sala sala)
+    {
+        salaToDelete = sala;
+        confirmation.Show();
+    }
+
+}
+
